@@ -73,11 +73,11 @@ tour_player_year <- gs_time_c %>%
   mutate(year = as.numeric(as.character(year)),
          decade = year - year%%10)
   
-q1_ploy_3 <- ggplot(tour_player_year, aes(x = as.factor(decade),  xlab = "number", fill = tournament))+
+q1_plot_3 <- ggplot(tour_player_year, aes(x = as.factor(decade),  xlab = "number", fill = tournament))+
   geom_bar( position = position_stack(reverse = T))+
   labs(x = "Decade", y = "Number of players") +
   coord_flip()
-q1_ploy_3
+q1_plot_3
 
 ```
   
@@ -91,14 +91,14 @@ player_age <- players %>%
   mutate(age_year = age%/%365,
          age_group = paste((age_year%/%3)*3, "-",(age_year%/%3)*3+2 ))
   
-q2_ploy_1 <- ggplot(player_age, aes(x = as.factor(age_group), fill = age_group))+
+q2_plot_1 <- ggplot(player_age, aes(x = as.factor(age_group), fill = age_group))+
   geom_bar()+
   labs(title = "Distribution of age by every 3 years",
       x="Age", 
       y = "Number of players",
       fill = "Age Group")
 
-q2_ploy_1
+q2_plot_1
 ```
 
 #### Extra practice: The distribution of current age of the winners in last 5 years.
@@ -113,7 +113,7 @@ age_gs_time <- left_join(gs_time, players, by = c("player" = "name")) %>%
   summarise(counts= n())
   
 
-q2_ploy_2 <- q2_ploy_1 <- ggplot(player_age, aes(x = as.factor(age_group), fill = age_group))+
+q2_plot_2 <- q2_plot_1 <- ggplot(player_age, aes(x = as.factor(age_group), fill = age_group))+
   geom_bar()+
   labs(title = "Distribution of age by every 3 years & current age of the winners in last 5 years",
        x="Age", 
@@ -121,11 +121,26 @@ q2_ploy_2 <- q2_ploy_1 <- ggplot(player_age, aes(x = as.factor(age_group), fill 
        fill = "Age group")+
   geom_point(data = age_gs_time, aes(x = age_group, y = counts, size = age_group, color = age_group))+ 
     labs(color = "Current age", size = "Current age")
-q2_ploy_2
+q2_plot_2
 
 ```
 
-  
+# Quesetion 3: Top 20 players 
+```{r}
+
+top_player <- gs %>% 
+  group_by(name, gender) %>% 
+  summarise(num_win = n()) %>% 
+  arrange(desc(num_win)) %>% 
+  head(n =20) 
+
+q3_plot_1 <- ggplot(top_player, aes(x = name, y = num_win, fill = name))+
+  geom_bar(stat = "identity")
+q3_plot_1
+```
+
+#### How to reroder X axis depend on Y axis?
+
   
   
   
