@@ -163,6 +163,42 @@ q3_plot_3 <- ggplot(top_player_firstname, aes(x = reorder(firstname, -num_win), 
 q3_plot_3
 ```
 
+```{r}
+
+q3_plot_4 <- ggplot(top_player_firstname, aes(x = reorder(firstname, -num_win), y = num_win, color = gender, size = num_win))+
+  geom_point()+
+  geom_text(aes(label=firstname), angle = 90, hjust = 2)+
+  ggtitle("The best top 20 players")+
+  theme(axis.text.x = element_text(size = 10, angle = 90))  
+
+q3_plot_4
+
+```
+
+# Quesetion 4: The performances of top 10 players 
+
+```{r}
+top10 <- top_player_firstname %>% 
+  head(n=10) %>% 
+  select("name","firstname")
+
+temp <- inner_join(gs, top10, by = "name") %>% 
+  select(-"grand_slam")
+
+age_gs_q4 <- inner_join(temp, players, by = "name") %>% 
+  mutate(age = floor(decimal_date(as.Date(tournament_date))-decimal_date(as.Date(date_of_birth)))) %>% 
+  select("name", "rolling_win_count", "gender","firstname","age")
+
+q4_plot_1 <- ggplot(age_gs_q4, aes(x= age, y = rolling_win_count))+
+  geom_step(aes(color = name))+
+  facet_grid(~gender)
   
-  
+q4_plot_1
+```
+
+
+
+
+
+
   
