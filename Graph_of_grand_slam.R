@@ -111,4 +111,21 @@ q3_plot_1
 
 # I want reorder  X axis depend on Y axis
 
+q3_plot_2 <- ggplot(top_player, aes(x = reorder(name, -num_win), y = num_win, fill = name))+
+  geom_bar(stat = "identity")
+q3_plot_2
+
+# Extra practice: Use first name, and split to two plots by gender.
+
+top_player_firstname <- top_player %>% 
+  mutate(firstname = sapply(strsplit(as.character(name), " "), "[", 1))
+
+q3_plot_3 <- ggplot(top_player_firstname, aes(x = reorder(firstname, -num_win), y = num_win, fill = firstname))+
+  geom_bar(stat = "identity")+
+  geom_text(aes(label=firstname), angle = 90, hjust = 2)+
+  ggtitle("The best top 20 players")+
+  facet_wrap(~gender)
+
+q3_plot_3
+
 

@@ -65,7 +65,7 @@ q1_plot_2
 ```
 
 
-#### Extra practice: Which tournaments is the bigest tournament by decade？
+### Extra practice: Which tournaments is the bigest tournament by decade？
 
 
 ```{r}
@@ -101,7 +101,7 @@ q2_plot_1 <- ggplot(player_age, aes(x = as.factor(age_group), fill = age_group))
 q2_plot_1
 ```
 
-#### Extra practice: The distribution of current age of the winners in last 5 years.
+### Extra practice: The distribution of current age of the winners in last 5 years.
 
 ```{r}
 age_gs_time <- left_join(gs_time, players, by = c("player" = "name")) %>% 
@@ -140,6 +140,28 @@ q3_plot_1
 ```
 
 #### How to reroder X axis depend on Y axis?
+
+```{r}
+q3_plot_2 <- ggplot(top_player, aes(x = reorder(name, -num_win), y = num_win, fill = name))+
+  geom_bar(stat = "identity")
+q3_plot_2
+
+```
+
+### Extra practice: Use first name, and split to two plots by gender.
+
+```{r}
+top_player_firstname <- top_player %>% 
+  mutate(firstname = sapply(strsplit(as.character(name), " "), "[", 1))
+
+q3_plot_3 <- ggplot(top_player_firstname, aes(x = reorder(firstname, -num_win), y = num_win, fill = firstname))+
+  geom_bar(stat = "identity")+
+  geom_text(aes(label=firstname), angle = 90, hjust = 2)+
+  ggtitle("The best top 20 players")+
+  facet_wrap(~gender)
+
+q3_plot_3
+```
 
   
   
