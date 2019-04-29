@@ -2,13 +2,13 @@ library(tidyverse)
 
 #load all data
 
-brexit <- read_csv("tidytuesday_2019_04_16/brexit.csv")
-corbyn <- read_csv("tidytuesday_2019_04_16/corbyn.csv")
-dogs <- read_csv("tidytuesday_2019_04_16/dogs.csv")
-eubalance <- read_csv("tidytuesday_2019_04_16/eu_balance.csv")
-pensions <- read_csv("tidytuesday_2019_04_16/pensions.csv")
-trade <- read_csv("tidytuesday_2019_04_16/trade.csv")
-women_research <- read_csv("tidytuesday_2019_04_16/women_research.csv")
+brexit <- read_csv("data/tidytuesday_2019_04_16/brexit.csv")
+corbyn <- read_csv("data/tidytuesday_2019_04_16/corbyn.csv")
+dogs <- read_csv("data/tidytuesday_2019_04_16/dogs.csv")
+eubalance <- read_csv("data/tidytuesday_2019_04_16/eu_balance.csv")
+pensions <- read_csv("data/tidytuesday_2019_04_16/pensions.csv")
+trade <- read_csv("data/tidytuesday_2019_04_16/trade.csv")
+women_research <- read_csv("data/tidytuesday_2019_04_16/women_research.csv")
 
 # Question 1: Guess how britain think about exit EU?
 
@@ -25,4 +25,54 @@ q1_plot_1
 
 # Question 2: Devide time to 4 stage, what is the choose in last day of each stage.
 
+rows <- nrow(brexit)
 
+brexit_stage <- brexit[c(1, rows%/%3, rows%/%3*2, rows), ]
+
+brexit_stage <- brexit_stage %>% 
+  mutate(other = 100-percent_responding_right-percent_responding_wrong,
+         date = as.factor(date))
+
+brexit_stage_long <-gather(brexit_stage, key="type", value = "percent", -date) 
+
+q2_plot_1 <- ggplot(brexit_stage_long, aes(x= "content",y = percent, fill = type))+
+  geom_bar(stat = "identity", position = "stack", width = 1)+
+  facet_grid(~as.factor(as.Date(date, "%d/%m/%y")))+
+  coord_polar(theta = "y")
+
+q2_plot_1
+
+#### To make it looks better....
+
+q2_plot_2 <- ggplot(brexit_stage_long, aes(x = type, y = percent, fill = type)) +
+  geom_bar(stat = "identity", alpha= 0.7)+
+  coord_polar()+
+  facet_grid(~as.factor(as.Date(date, "%d/%m/%y")))+
+  labs(x = "", y = "")+ 
+  theme(axis.text = element_blank(), 
+        axis.ticks = element_blank(),
+        legend.position = "none")
+
+q2_plot_2  
+
+
+q2_plot_3 <- ggplot(brexit_stage_long, aes(x = type, y = percent, fill = type)) +
+  geom_bar(stat = "identity", alpha= 0.7)+
+  coord_polar(theta = "y")+
+  facet_grid(~as.factor(as.Date(date, "%d/%m/%y")))+
+  labs(x = "", y = "")+ 
+  theme(axis.text = element_blank(), 
+        axis.ticks = element_blank(),
+        legend.position = "none")
+
+q2_plot_3 
+
+# Question 3: Which political or group is the popular on Facebook?
+
+q3_plot_1 <- ggplot(corbyn, aes(x=political_group, y = avg_facebook_likes, fill = political_group))+
+  geom_bar(stat = "identity")
+
+q3_plot_1
+
+
+# Question 4: 

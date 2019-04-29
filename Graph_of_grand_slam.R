@@ -2,9 +2,9 @@ library(tidyverse)
 library(lubridate)
 # load data
 
-gs <- read.csv("tidytuesday_2019_04_09/grand_slams.csv")
-gs_time <- read.csv("tidytuesday_2019_04_09/grand_slam_timeline.csv")
-players <- read.csv("tidytuesday_2019_04_09/player_dob.csv") 
+gs <- read.csv("data/tidytuesday_2019_04_09/grand_slams.csv")
+gs_time <- read.csv("data/tidytuesday_2019_04_09/grand_slam_timeline.csv")
+players <- read.csv("data/tidytuesday_2019_04_09/player_dob.csv") 
 
 
 ##############################################################
