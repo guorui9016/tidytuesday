@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-#load all data
+## load all data
 
 ```{r}
 library(tidyverse)
@@ -22,7 +22,7 @@ trade <- read_csv("data/tidytuesday_2019_04_16/trade.csv")
 women_research <- read_csv("data/tidytuesday_2019_04_16/women_research.csv")
 ```
 
-# Question 1: Guess how britain think about exit EU?
+# Question 1: In data brexit.csv, guess how britain think about exit EU?
 
 ```{r}
 
@@ -39,7 +39,8 @@ q1_plot_1
 
 ```
 
-# Question 2: Devide time to 4 stage, what is the choose in last day of each stage.
+# Question 2: In data brexit.csv, devide time to 4 stage, what is the choose in last day of each stage.
+
 ```{r}
 
 rows <- nrow(brexit)
@@ -89,6 +90,16 @@ q2_plot_3 <- ggplot(brexit_stage_long, aes(x = type, y = percent, fill = type)) 
 
 q2_plot_3 
 
+```
+
+# Question 3: in data corbyn.csv, which political or group is the popular on Facebook?
+  <font color = blue> Want to draw a average value as a refrence line</font> 
+
+```{r}
+q3_plot_1 <- ggplot(corbyn, aes(x=political_group, y = avg_facebook_likes, fill = political_group))+
+  geom_bar(stat = "identity")
+
+q3_plot_1
 ```
 
 

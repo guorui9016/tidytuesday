@@ -10,7 +10,7 @@ pensions <- read_csv("data/tidytuesday_2019_04_16/pensions.csv")
 trade <- read_csv("data/tidytuesday_2019_04_16/trade.csv")
 women_research <- read_csv("data/tidytuesday_2019_04_16/women_research.csv")
 
-# Question 1: Guess how britain think about exit EU?
+# Question 1: In data brexit.csv, guess how britain think about exit EU?
 
 brexit_long <- gather(brexit, key = "br_choose",value = "percent", -date, factor_key = TRUE)
 
@@ -23,7 +23,7 @@ q1_plot_1 <- ggplot(brexit_long, aes(x= as.Date(date, "%d/%m/%y"),y = percent, c
 
 q1_plot_1
 
-# Question 2: Devide time to 4 stage, what is the choose in last day of each stage.
+# Question 2: In data brexit.csv, devide time to 4 stage, what is the choose in last day of each stage.
 
 rows <- nrow(brexit)
 
@@ -67,7 +67,7 @@ q2_plot_3 <- ggplot(brexit_stage_long, aes(x = type, y = percent, fill = type)) 
 
 q2_plot_3 
 
-# Question 3: Which political or group is the popular on Facebook?
+# Question 3: In data corbyn.csv, which political or group is the popular on Facebook?
 
 q3_plot_1 <- ggplot(corbyn, aes(x=political_group, y = avg_facebook_likes, fill = political_group))+
   geom_bar(stat = "identity")
@@ -75,4 +75,15 @@ q3_plot_1 <- ggplot(corbyn, aes(x=political_group, y = avg_facebook_likes, fill 
 q3_plot_1
 
 
-# Question 4: 
+# Question 4: In Data dog.csv, does people like small dog more than big dog?
+
+q4_plot_1 <- ggplot(dogs, aes(x=year, y = avg_weight))+
+  geom_path()
+    
+q4_plot_1
+
+# Question 5: Which country balance become to better?
+
+# Question 6: Which country support old people more than other country?
+
+
