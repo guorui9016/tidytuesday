@@ -19,37 +19,35 @@ library(lubridate)
 ## Load data
 
 ```{r}
-gs <- read.csv("data/tidytuesday_2019_04_09/grand_slams.csv")
-gs_time <- read.csv("data/tidytuesday_2019_04_09/grand_slam_timeline.csv")
-players <- read.csv("data/tidytuesday_2019_04_09/player_dob.csv") 
+gs <- read_csv("data/grand_slams.csv")
+gs_time <- read_csv("data/grand_slam_timeline.csv")
+players <- read_csv("data/player_dob.csv") 
 ```
 
 ## Question 1:
 
   Which tournaments is the bigest tournament by years?
   
-#### Clean data first.
-  
-```{r}
-gs_time_c <- gs_time %>% 
-  na.omit() %>% 
-  mutate(year = as.factor(year)) %>% 
-  filter(outcome != "Absent")
-```
-
-  
 #### Method 1
   
 
-```{r}
-tour_player <- gs_time_c %>% 
-  group_by(tournament) %>% 
-  summarize(num_play = n())
+```{r tournament players plots} 
 
-q1_plot_1 <- ggplot(tour_player, aes(x = tournament, y = num_play))+
-  geom_bar(stat = "identity")
+rm(list = "gs_time_c")
+
+q1_plot_1 <- gs_time %>% 
+  #na.omit() %>% 
+  mutate_all(as.factor) %>% 
+  filter(outcome != "absent") %>% 
+  #group_by(tournament) %>% 
+  #summarize(num_play = n()) %>% 
+  ggplot(aes(x = tournament))+
+  geom_bar(stat = "count")+
+  theme_minimal()+
+  facet_wrap(gender~.)
 
 q1_plot_1
+
 ```
 
 
@@ -57,7 +55,8 @@ q1_plot_1
 
 
 ```{r}
-q1_plot_2 <- ggplot(gs_time_c, aes(x = tournament, fill = tournament))+
+
+q1_plot_2 <- ggplot(gs_time, aes(x = tournament))+
   geom_bar()
 
 q1_plot_2
@@ -69,14 +68,18 @@ q1_plot_2
 
 
 ```{r}
-tour_player_year <- gs_time_c %>% 
-  mutate(year = as.numeric(as.character(year)),
-         decade = year - year%%10)
+
+year_dec <- data.frame(year = (1961:2020),
+                       dec = rep(c("60", "70", "80", "90", "00", "10"), each = 10))
+
+tour_player_year <- gs_time %>% 
+  left_join(year_dec)
   
-q1_plot_3 <- ggplot(tour_player_year, aes(x = as.factor(decade),  xlab = "number", fill = tournament))+
+q1_plot_3 <- ggplot(tour_player_year, aes(x = as.factor(dec),  xlab = "number", fill = tournament))+
   geom_bar( position = position_stack(reverse = T))+
   labs(x = "Decade", y = "Number of players") +
   coord_flip()
+
 q1_plot_3
 
 ```
