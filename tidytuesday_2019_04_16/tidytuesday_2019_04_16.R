@@ -1,4 +1,5 @@
 library(tidyverse)
+library(mapdata)
 
 se#load all data
 
@@ -116,6 +117,44 @@ q7_1 <- ggplot(women_research, aes(x = field, y = percent_women))+
   
 q7_1
 
+
+
+#### To make it better...
+
+q7_2 <- ggplot(women_research, aes(x = field, y = percent_women, color = field))+
+  geom_boxplot()+
+  theme(axis.text.x = element_text(angle = 90))+
+  scale_color_manual(values = c("black", "black", "red", "black","green"))  
+  #scale_color_manual(values = c("black", "black", "red", "black","black"))  
+    
+q7_2
+
+
 # Question 8: Which country is lost of women go to work?
+
+#### In this case I learn how to mean by row in 
+
+women_research_wide <- spread(women_research, field, percent_women) 
+
+women_research_wide$avg <- rowMeans(women_research_wide[, -1])
+
+q7_3 <- ggplot(women_research_wide, aes(x = country, y = avg, size = avg, color = country))+
+  geom_point()
+q7_3
+
+#### In this case learn how to draw data in real map.
+
+world <- map_data("world")
+
+ww <- left_join(world, women_research_wide, by = c("region" = "country"))
+
+q7_4 <- ggplot(ww, aes(x=long, y = lat, group = group))+
+  geom_polygon(aes(fill = avg))+
+  scale_fill_viridis_c()
+
+q7_4
+
+            
+rm(list = c("q7_1", "q7_2","q7_3","q7_4"))  
 
 # Question 9:
