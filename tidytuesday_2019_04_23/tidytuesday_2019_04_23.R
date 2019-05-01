@@ -30,10 +30,10 @@ q2_1 <- anime_unique %>%
   filter(!is.na(studio)) %>% 
   group_by(studio) %>% 
   summarise(n = n(),
-            pop_avg = mean(popularity)) %>% 
-  ggplot(aes(x=pop_avg, y = n))+
-  geom_point(aes(size = pop_avg, color = pop_avg), show.legend = F)+
-  labs(x = "Average of Popularity", y = "Number of anime from studio", title = "Quanitity or Quality?")+
+            rank_avg = mean(rank)) %>% 
+  ggplot(aes(x=rank_avg, y = n))+
+  geom_point(aes(size = rank_avg, color = rank_avg), show.legend = F)+
+  labs(x = "Average of Rank", y = "Number of anime from studio", title = "Quanitity or Quality?")+
   theme(plot.background = element_rect("#fceec7"),
         plot.title = element_text(size = 25, hjust = 0.4,face = "bold"), 
         panel.background = element_rect("#fceec7"))+
@@ -41,11 +41,31 @@ q2_1 <- anime_unique %>%
 
 q2_1
 
-# Question 3: How many fans for each anime in top 20.
-
-
+# Question 3: Do People change taste? 
 
 
 # Question 4: Which studio is the best using game as source?
+
+#### How to get the last 10 small number in one colnum but multi-row？ 
+
+studio_rank <-  anime_unique %>% 
+  filter(source == "Game", !is.na(studio)) %>% 
+  group_by(studio) %>% 
+  mutate(rank_avg = mean(rank)) %>%
+  distinct(studio, .keep_all = T) %>% 
+  select(studio,rank_avg) %>%
+  ungroup() %>% 
+  arrange(rank_avg) %>%
+  mutate(studio_rank = c(1:length(unique(studio))))
+
+q4_1 <- anime_unique %>% 
+  left_join(studio_rank, by= "studio") %>% 
+  filter(studio_rank < 11) %>% 
+  ggplot(aes(x = reorder(studio,rank_avg), y = rank))+
+  geom_boxplot()
+  
+q4_1
+
+rm(list = "studio_rank")
 
 # Question 5: Number of anime in different genre
