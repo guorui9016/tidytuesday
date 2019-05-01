@@ -43,6 +43,17 @@ q2_1
 
 # Question 3: Do People change taste? 
 
+#### Some thing wrong?
+
+q3_1 <- anime %>% 
+  group_by(genre) %>% 
+  mutate(genre_pop = mean(favorites),
+         year = year(start_date)) %>% 
+  filter(!is.na(genre), year > 1970) %>% 
+  ggplot(aes(x= year, y = genre))+
+  geom_tile(aes(fill = genre_pop))
+
+q3_1
 
 # Question 4: Which studio is the best using game as source?
 
