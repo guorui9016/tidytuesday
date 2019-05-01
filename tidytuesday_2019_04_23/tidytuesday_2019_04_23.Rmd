@@ -1,0 +1,64 @@
+---
+title: "tidytuesday_2019_04_23"
+author: "Rui Guo"
+date: "01/05/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(lubridate)
+anime <- read_csv("tidytuesday_2019_04_23/data/tidy_anime.csv")
+```
+
+# Question 1: Do anime become to better and better?
+
+#### In this case learn use distinct for data.frame. unique() only work for vector.
+
+```{r}
+
+anime_unique <- anime %>% 
+  distinct(animeID, .keep_all = T) %>% 
+  filter(scored_by > 1000) %>% 
+  mutate(decade = as.character((year(start_date)%/%10) * 10))
+
+q1_1 <- ggplot(anime_unique,aes(x = decade, y = score))+
+  geom_jitter(aes(size = scored_by, color = decade, alpha = 0.1), show.legend = F)+
+  scale_color_viridis_d()+
+  labs(x = "Decade", y = "Score", title = " Does anime become to better?")+
+  theme(plot.background = element_rect("black"),
+        panel.background =element_rect("black"),
+        panel.grid.major = element_blank(),
+        plot.title = element_text(hjust = 0.47, vjust = 1,color = "white", size = 20 ),
+        axis.title = element_text(color = "white"),
+        axis.text = element_text(color = "white"), 
+        )
+q1_1
+
+```
+
+# Question 2: Quanitity or Quality?
+
+#### In this case learn put all thing in one 
+
+```{r}
+q2_1 <- anime_unique %>%
+  filter(!is.na(studio)) %>% 
+  group_by(studio) %>% 
+  summarise(n = n(),
+            pop_avg = mean(popularity)) %>% 
+  ggplot(aes(x=pop_avg, y = n))+
+  geom_point(aes(size = pop_avg, color = pop_avg), show.legend = F)+
+  labs(x = "Average of Popularity", y = "Number of anime from studio", title = "Quanitity or Quality?")+
+  theme(plot.background = element_rect("#fceec7"),
+        plot.title = element_text(size = 25, hjust = 0.4,face = "bold"), 
+        panel.background = element_rect("#fceec7"))+
+  scale_color_continuous(low = "green", high = "blue")
+
+q2_1
+```
+
