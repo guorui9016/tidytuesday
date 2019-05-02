@@ -177,8 +177,7 @@ Q6 + geom_point(color = "darkblue", size = 5, alpha=0.5)+
   
 # Question 7: Dose people like original anime more than menga in top 20?
 
-#### learn how to get top 20 from each type?? 
-
+#### learn how to get top 20 from each type.
 
 ```{r}
 
@@ -188,8 +187,10 @@ q7 <- anime_unique %>%
   select("name","type","source","genre","score")
 
 ggplot(q7, aes(x= source, y = score))+
-  geom_point()+
+  geom_bar(stat = "identity")+
   facet_wrap(~type, scale = "free")+
-  theme(axis.text.x = element_text(angle = 45,  ))
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1 ))
+  
 ```
 
