@@ -54,7 +54,7 @@ q2_1 <- anime_unique %>%
             rank_avg = mean(rank)) %>% 
   ggplot(aes(x=rank_avg, y = n))+
   geom_point(aes(size = rank_avg, color = rank_avg), show.legend = F)+
-  labs(x = "Average of Rank", y = "Number of anime from studio", title = "Quanitity or Quality?")+
+  labs(x = "Average of Rank(smaller mean better)", y = "Number of anime from studio", title = "Quanitity or Quality?")+
   theme(plot.background = element_rect("#fceec7"),
         plot.title = element_text(size = 25, hjust = 0.4,face = "bold"), 
         panel.background = element_rect("#fceec7"))+
@@ -89,6 +89,7 @@ q3_1
 #### How to get the last 10 small number in one colnum but multi-row？ 
 
 ```{r Q4 plot}
+
 studio_rank <-  anime_unique %>% 
   filter(source == "Game", !is.na(studio)) %>% 
   group_by(studio) %>% 
@@ -99,26 +100,96 @@ studio_rank <-  anime_unique %>%
   arrange(rank_avg) %>%
   mutate(studio_rank = c(1:length(unique(studio))))
 
-q4_1 <- anime_unique %>% 
+q4 <- anime_unique %>% 
   left_join(studio_rank, by= "studio") %>% 
   filter(studio_rank < 11) %>% 
   ggplot(aes(x = reorder(studio,rank_avg), y = rank))+
-  geom_boxplot()
-  
-q4_1
+    theme(axis.text.x = element_text(angle = 90))
+
+
+```
+
+#### Way 1:
+
+```{r Q4 plot way 1}
+
+q4 +  geom_violin()+
+  geom_point(color = "gray", alpha = 0.5)
+
+```
+
+
+#### Way 2
+
+```{r Q4 plot way 2}
+
+q4 + geom_boxplot()
+
 ```
 
 # Question 5: Number of anime in different genre
 
 ```{r}
-q5_1 <- anime %>% 
+
+q5 <- anime %>% 
   mutate(year = year(start_date)) %>%
-  filter(!is.na(genre)) %>% 
+  filter(!is.na(genre), year > 1960) %>% 
   group_by(genre, year) %>% 
   summarise(n = n()) %>% 
-  ggplot(aes(x = year, y = genre))+
-  geom_tile(aes(fill=n))
-q5_1
+  ggplot()
+```
 
+#### Q5 way 1
+
+#### I got a warning message.
+
+```{r Q5 plot way 1}
+
+q5 +  geom_tile(aes(x = year, y = genre,fill=n))+
+  labs(x = "Year", y = "Genre", title = "Number of anime in different genre")
+
+```
+
+#### Q5 way 2
+
+```{r r Q5 plot way 2}
+
+q5 + geom_area(aes(x = year, y = n, fill=genre))+
+  labs(x = "Year", y = "Number of anime", title = "Number of anime in different genre")
+
+```
+
+# Question 6: Which way people prefer to watch anime?
+
+```{r Q6 plot}
+
+Q6 <- anime_unique %>% 
+  select(animeID, name, type, members) %>% 
+  group_by(type) %>% 
+  summarise(sum_member = sum(members)) %>% 
+  ggplot(aes(x= sum_member, y = reorder(type, sum_member)))+
+  theme_bw()
+
+Q6 + geom_point(color = "darkblue", size = 5, alpha=0.5)+
+  geom_segment(aes(yend = type), xend = 0, color = "darkblue",size  =2,alpha=0.2)
+
+```
+  
+# Question 7: Dose people like original anime more than menga in top 20?
+
+#### learn how to get top 20 from each type?? 
+
+
+```{r}
+
+q7 <- anime_unique %>% 
+  group_by(type) %>% 
+  top_n(n=20, wt = score) %>% 
+  select("name","type","source","genre","score")
+
+ggplot(q7, aes(x= source, y = score))+
+  geom_point()+
+  facet_wrap(~type, scale = "free")+
+  theme(axis.text.x = element_text(angle = 45,  ))
 ```
 

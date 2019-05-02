@@ -5,6 +5,8 @@ anime <- read_csv("tidytuesday_2019_04_23/data/tidy_anime.csv")
 
 # Question 1: Do anime become to better and better?
 
+#### Why anime_unique is
+
 anime_unique <- anime %>% 
   distinct(animeID, .keep_all = T) %>% 
   filter(scored_by > 1000) %>% 
@@ -24,6 +26,8 @@ q1_1 <- ggplot(anime_unique,aes(x = decade, y = score))+
   
 q1_1
 
+rm(list= "q1_1")
+
 # Question 2: Quanitity or Quality?
 
 q2_1 <- anime_unique %>%
@@ -33,13 +37,15 @@ q2_1 <- anime_unique %>%
             rank_avg = mean(rank)) %>% 
   ggplot(aes(x=rank_avg, y = n))+
   geom_point(aes(size = rank_avg, color = rank_avg), show.legend = F)+
-  labs(x = "Average of Rank", y = "Number of anime from studio", title = "Quanitity or Quality?")+
+  labs(x = "Average of Rank(smaller is better)", y = "Number of anime from studio", title = "Quanitity or Quality?")+
   theme(plot.background = element_rect("#fceec7"),
         plot.title = element_text(size = 25, hjust = 0.4,face = "bold"), 
         panel.background = element_rect("#fceec7"))+
   scale_color_continuous(low = "green", high = "blue")
 
 q2_1
+
+rm (list  ="q2_1")
 
 # Question 3: Do People change taste? 
 
@@ -54,6 +60,7 @@ q3_1 <- anime %>%
   theme_classic()
 
 q3_1
+rm(list = "q3_1")
 
 # Question 4: Which studio is the best using game as source?
 
@@ -69,23 +76,64 @@ studio_rank <-  anime_unique %>%
   arrange(rank_avg) %>%
   mutate(studio_rank = c(1:length(unique(studio))))
 
-q4_1 <- anime_unique %>% 
+q4 <- anime_unique %>% 
   left_join(studio_rank, by= "studio") %>% 
   filter(studio_rank < 11) %>% 
-  ggplot(aes(x = reorder(studio,rank_avg), y = rank))+
-  geom_boxplot()
-  
-q4_1
+  ggplot(aes(x = reorder(studio,rank_avg), y = rank))
 
-rm(list = "studio_rank")
+#### Q4 Way 1
+
+q4 +  geom_violin()+
+  geom_point(color = "gray", alpha = 0.5)
+
+#### Q4 way 2
+q4 + geom_boxplot()
+
+rm(list = "q4")
 
 # Question 5: Number of anime in different genre
 
-q5_1 <- anime %>% 
+q5 <- anime %>% 
   mutate(year = year(start_date)) %>%
-  filter(!is.na(genre)) %>% 
+  filter(!is.na(genre), year > 1960) %>% 
   group_by(genre, year) %>% 
   summarise(n = n()) %>% 
-  ggplot(aes(x = year, y = genre))+
-  geom_tile(aes(fill=n))
-q5_1
+  ggplot()
+
+#### Q5 way 1
+
+#### I got a warning message.
+
+q5 +  geom_tile(aes(x = year, y = genre,fill=n))+
+  labs(x = "Year", y = "Genre", title = "Number of anime in different genre")
+
+#### Q5 way 2
+
+q5 + geom_area(aes(x = year, y = n, fill=genre))+
+  labs(x = "Year", y = "Number of anime", title = "Number of anime in different genre")
+
+rm(lsit="q5")
+
+# Question 6: Which way people prefer to watch anime?
+
+Q6 <- anime_unique %>% 
+  select(animeID, name, type, members) %>% 
+  group_by(type) %>% 
+  summarise(sum_member = sum(members)) %>% 
+  ggplot(aes(x= sum_member, y = reorder(type, sum_member)))+
+  theme_bw()
+
+Q6 + geom_point(color = "darkblue", size = 5, alpha=0.5)+
+  geom_segment(aes(yend = type), xend = 0, color = "darkblue",size  =2,alpha=0.2)
+
+rm(list = "Q6")
+
+# Question 7: Dose people like original anime more than menga in top 20?
+
+#### how to get top 20 from each type??
+
+Q7 <- anime_unique %>% 
+  arrange(desc(score)) %>% 
+  head(20) %>% 
+
+
