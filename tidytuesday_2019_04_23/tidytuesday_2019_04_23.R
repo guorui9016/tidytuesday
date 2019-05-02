@@ -43,15 +43,15 @@ q2_1
 
 # Question 3: Do People change taste? 
 
-#### Some thing wrong?
-
 q3_1 <- anime %>% 
-  group_by(genre) %>% 
-  mutate(genre_pop = mean(favorites),
-         year = year(start_date)) %>% 
+  mutate(year = year(start_date)) %>% 
+  group_by(genre, year) %>% 
+  mutate(genre_fav = mean(favorites)) %>% 
   filter(!is.na(genre), year > 1970) %>% 
-  ggplot(aes(x= year, y = genre))+
-  geom_tile(aes(fill = genre_pop))
+  ggplot(aes(x= year, y = reorder(genre, genre_fav)))+
+  geom_tile(aes(fill = genre_fav))+
+  labs(x = "Year", y = "Genre", title = "Do People change taste?", fill = "Favorite")+
+  theme_classic()
 
 q3_1
 
@@ -80,3 +80,12 @@ q4_1
 rm(list = "studio_rank")
 
 # Question 5: Number of anime in different genre
+
+q5_1 <- anime %>% 
+  mutate(year = year(start_date)) %>%
+  filter(!is.na(genre)) %>% 
+  group_by(genre, year) %>% 
+  summarise(n = n()) %>% 
+  ggplot(aes(x = year, y = genre))+
+  geom_tile(aes(fill=n))
+q5_1
