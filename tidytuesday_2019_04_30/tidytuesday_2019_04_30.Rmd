@@ -1,0 +1,26 @@
+---
+title: "tidytuesday_2019_04_30"
+author: "Rui Guo"
+date: "03/05/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F )
+```
+
+```{r}
+library(tidyverse)
+library(lubridate)
+
+```
+
+# Load data
+
+```{r}
+mp_light <- read_csv("tidytuesday_2019_04_30/data/mp_light.csv")
+bird_collisions <- read_csv("tidytuesday_2019_04_30/data/bird_collisions.csv", sep)
+bird_call <- read_csv("tidytuesday_2019_04_30/data/bird_call.csv")
+```
+
+# Question 1: 

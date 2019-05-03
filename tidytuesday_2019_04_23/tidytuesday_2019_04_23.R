@@ -132,8 +132,15 @@ rm(list = "Q6")
 
 #### how to get top 20 from each type??
 
-Q7 <- anime_unique %>% 
-  arrange(desc(score)) %>% 
-  head(20) %>% 
+q7 <- anime_unique %>% 
+  group_by(type) %>% 
+  top_n(n=20, wt = score) %>% 
+  select("name","type","source","genre","score")
+
+ggplot(q7, aes(x= source, y = score))+
+  geom_bar(stat = "identity")+
+  facet_wrap(~type, scale = "free")+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1 )) 
 
 
