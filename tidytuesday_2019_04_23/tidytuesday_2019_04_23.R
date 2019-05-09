@@ -128,7 +128,22 @@ rm(list = "Q6")
 
 # Question 7: Dose people like original anime more than menga in top 20?
 
+<<<<<<< HEAD
 #### learn how to get top 20 from each type?? 
+=======
+#### how to get top 20 from each type??
+
+q7 <- anime_unique %>% 
+  group_by(type) %>% 
+  top_n(n=20, wt = score) %>% 
+  select("name","type","source","genre","score")
+
+ggplot(q7, aes(x= source, y = score))+
+  geom_bar(stat = "identity")+
+  facet_wrap(~type, scale = "free")+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1 )) 
+>>>>>>> eda14c06ce139250e9df31d675466ee13079549f
 
 q7 <- anime_unique %>% 
   group_by(type) %>% 
