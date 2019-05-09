@@ -21,9 +21,7 @@ q1_1 <- ggplot(anime_unique,aes(x = decade, y = score))+
         panel.grid.major = element_blank(),
         plot.title = element_text(hjust = 0.47, vjust = 1,color = "white", size = 20 ),
         axis.title = element_text(color = "white"),
-        axis.text = element_text(color = "white"), 
-        )
-  
+        axis.text = element_text(color = "white"))
 q1_1
 
 rm(list= "q1_1")
@@ -130,10 +128,16 @@ rm(list = "Q6")
 
 # Question 7: Dose people like original anime more than menga in top 20?
 
-#### how to get top 20 from each type??
+#### learn how to get top 20 from each type?? 
 
-Q7 <- anime_unique %>% 
-  arrange(desc(score)) %>% 
-  head(20) %>% 
+q7 <- anime_unique %>% 
+  group_by(type) %>% 
+  top_n(n=20, wt = score) %>% 
+  select("name","type","source","genre","score")
 
+ggplot(q7, aes(x= source, y = score))+
+  geom_point()+
+  facet_wrap(~type, scale = "free")+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 

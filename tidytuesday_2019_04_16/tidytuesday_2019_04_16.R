@@ -138,19 +138,25 @@ women_research_wide <- spread(women_research, field, percent_women)
 
 women_research_wide$avg <- rowMeans(women_research_wide[, -1])
 
-q8_1 <- ggplot(women_research_wide, aes(x = country, y = avg, size = avg, color = country))+
-  geom_point()
+q8_1 <- ggplot(women_research_wide, aes(x = country, y = avg, size = avg))+
+  geom_point()+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0))+
+  labs()
+
 q8_1
 
 #### In this case learn how to draw data in real map.
 
 world <- map_data("world")
 
-ww <- left_join(world, women_research_wide, by = c("region" = "country"))
+ww <- world %>% 
+  left_join(women_research_wide, by = c("region" = "country"))
 
 q8_2 <- ggplot(ww, aes(x=long, y = lat, group = group))+
   geom_polygon(aes(fill = avg))+
-  scale_fill_viridis_c()
+  scale_fill_viridis_c()+
+  theme_classic()
 
 q8_2
             
