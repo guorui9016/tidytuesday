@@ -17,7 +17,7 @@ bike <- read_csv("tidytuesday_2019_04_02/data/bike_traffic.csv", col_types = "cc
 
 bike %>% 
   group_by(day, year) %>% 
-  filter(year !=2019 ) %>% 
+  filter(year !=2019 & year!= 2013 ) %>% 
   summarise(sum = sum(bike_count, na.rm = T)) %>% 
   ggplot(aes(x= day, y = sum, group = year, color= as.factor(year)))+
   geom_line(size = 2, alpha = 0.5)+
@@ -30,7 +30,10 @@ bike %>%
 bike %>% 
   group_by(day, crossing) %>% 
   summarise(sum = sum(bike_count, na.rm = T)) %>% 
-  ggplot(aes(x=day, y=sum, group = crossing, color = crossing))+
+  ggplot(aes(x = ordered(day, levels = c( "Mon","Tue","Wed","Thu","Fri","Sat","Sun")), 
+             y=sum, 
+             group = crossing, 
+             color = crossing))+
   geom_line(size =2 , alpha = 0.5)+
   geom_point(shape = 20, size  = 5,alpha = 0.5)+
   labs(x="Week", y = "Number of bikes", title = "How busy of road", color = "Road")+
@@ -45,6 +48,5 @@ q3 <- bike %>%
   summarise(sum = sum(bike_count, na.rm = T)) %>% 
   ggplot(aes(x =crossing , y =sum ,  fil= day_type))+
   geom_bar(stat = "identity", alpha = 0.6)
-
 
 q3
