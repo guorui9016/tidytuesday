@@ -10,7 +10,8 @@ library(lubridate)
 bike <- read_csv("tidytuesday_2019_04_02/data/bike_traffic.csv", col_types = "cccdd") %>% 
   mutate(date = mdy_hms(date)) %>% 
   mutate(day = wday(date, label = T),
-         year = year(date))
+         year = year(date),
+         time = hour(date))
 
 
 # Question 1: Which day is a busy day?
@@ -40,13 +41,7 @@ bike %>%
   theme_classic()
 
 
-# Question 3: I want see what diff between weekday and weekend by diff road.
+# Question 3: Which direction by diff road
 
 q3 <- bike %>% 
-  mutate(day_type = if_else(day %in% c("Sat", "Sun"), "weekdend", "weekday")) %>% 
-  group_by(day, day_type, crossing) %>% 
-  summarise(sum = sum(bike_count, na.rm = T)) %>% 
-  ggplot(aes(x =crossing , y =sum ,  fil= day_type))+
-  geom_bar(stat = "identity", alpha = 0.6)
-
-q3
+  group_by()
