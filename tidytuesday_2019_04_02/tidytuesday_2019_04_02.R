@@ -43,5 +43,36 @@ bike %>%
 
 # Question 3: Which direction by diff road
 
-q3 <- bike %>% 
-  group_by()
+bike %>% 
+  filter(crossing!="Sealth Trail") %>% 
+  group_by(day, crossing, direction) %>% 
+  summarise(sum=sum(bike_count, na.rm = T)) %>% 
+  ggplot(aes(x=day, y=sum))+
+  geom_col(aes(fill = direction), position = "dodge")+
+  facet_wrap(crossing~.)+
+  labs(x="Day", 
+       y="Number of bike",
+       title = "Which direction by diff road?",
+       fill = "Direction")+
+  theme(plot.title = element_text(hjust = 0.5))
+  theme_classic()
+
+  # Question 4: When they ride bike?
+  
+bike %>% 
+  filter(crossing !=" Sealth Trail", year!= 2019, year!=2013) %>% 
+  mutate(day_type = if_else(day %in% c("Sat", "Sun"), "Weekend", "Weekday")) %>% 
+  group_by(day_type, time, crossing, year) %>% 
+  summarise(sum = sum(bike_count, na.rm = T)) %>% 
+  ggplot(aes(x=time, y=sum))+
+  geom_line(aes(group = year, color = as.factor(year)))+
+  facet_grid(day_type~crossing)+
+  labs(x=" Time",
+       y="Number of bike",
+       group="Year",
+       title = "When they ride bike")+
+  theme(plot.title = element_text(hjust = 0.5))+
+  theme_classic()
+
+
+  
