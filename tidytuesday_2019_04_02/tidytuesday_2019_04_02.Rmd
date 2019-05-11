@@ -1,21 +1,36 @@
+---
+title: "tidytuesday_2019_04_02"
+author: "Rui Guo"
+date: "11/05/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 #### 1. learn use dmy_hms and what diff between week and wday.
 
 
 #### 2. Split string by " " in data frame ??
+
+```{r}
 Sys.setlocale("LC_TIME", "English")
 
 library(tidyverse)
 library(lubridate)
 
-bike <- read_csv("tidytuesday_2019_04_02/data/bike_traffic.csv", col_types = "cccdd") %>% 
+bike <- read_csv("data/bike_traffic.csv", col_types = "cccdd") %>% 
   mutate(date = mdy_hms(date)) %>% 
   mutate(day = wday(date, label = T),
          year = year(date),
          time = hour(date))
+```
 
 
 # Question 1: Which day is a busy day?
 
+
+```{r}
 bike %>% 
   group_by(day, year) %>% 
   filter(year !=2019 & year!= 2013 ) %>% 
@@ -25,9 +40,12 @@ bike %>%
   geom_point(shape = 20, size  = 5,alpha = 0.5)+
   labs(x="Week", y = "Number of bikes", title = "Do people like ride bike now?", color = "Year")+
   theme_classic()
+```
   
 # Question 2: Busy road?
 
+
+```{r}
 bike %>% 
   group_by(day, crossing) %>% 
   summarise(sum = sum(bike_count, na.rm = T)) %>% 
@@ -39,10 +57,13 @@ bike %>%
   geom_point(shape = 20, size  = 5,alpha = 0.5)+
   labs(x="Week", y = "Number of bikes", title = "How busy of road", color = "Road")+
   theme_classic()
+```
 
 
 # Question 3: Which direction by diff road
 
+
+```{r}
 bike %>% 
   filter(crossing!="Sealth Trail") %>% 
   group_by(day, crossing, direction) %>% 
@@ -54,11 +75,14 @@ bike %>%
        y="Number of bike",
        title = "Which direction by diff road?",
        fill = "Direction")+
-  theme(plot.title = element_text(hjust = 0.5))
+  theme(plot.title = element_text(hjust = 0.5))+
   theme_classic()
+```
 
 # Question 4: When they ride bike?
   
+
+```{r}
 bike %>% 
   filter(crossing !="Sealth Trail", year!= 2019, year!=2013) %>% 
   mutate(day_type = if_else(day %in% c("Sat", "Sun"), "Weekend", "Weekday")) %>% 
@@ -73,9 +97,12 @@ bike %>%
        title = "When they ride bike")+
   theme(plot.title = element_text(hjust = 0.5))+
   theme_classic()
+```
 
 #### Way 2
 
+
+```{r}
 bike %>% 
   filter(crossing !="Sealth Trail", year!= 2019, year!=2013) %>% 
   mutate(day_type = if_else(day %in% c("Sat", "Sun"), "Weekend", "Weekday")) %>% 
@@ -83,6 +110,8 @@ bike %>%
   summarise(sum = sum(bike_count, na.rm = T)) %>% 
   ggplot(aes(x = year, y = time)) + 
   geom_tile(aes(fill = sum))+
-  facet_grid(day_type~crossing)
+  facet_grid(day_type~crossing)+
+  theme_classic()
+```
 
   
