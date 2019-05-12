@@ -58,7 +58,30 @@ pets %>%
   geom_point(aes(size=n))
 
 
-# Question 4: Pet number growing?
+# Question 4: Pet number growing in Seattle?
 
-# Question 5: Which name is good for both pet?
+pets %>% 
+  mutate(year = year(issue_date)) %>% 
+  count(species, year) %>% 
+  filter(year > 2011) %>% 
+  ggplot(aes(x=year, y=n, color = species))+
+  geom_line(size = 2, alpha=0.8)+
+  labs(x="Year",
+       y="Number of Pet",
+       title = "Do human feel alone?",
+       color = "Pet")+
+  theme_classic()
+
+# Question 5: Top 10 lonely area in Seattle
+
+
+p <- pets %>% 
+  mutate(year = year(issue_date)) %>% 
+  count(zip_code, year) %>% 
+  left_join(zipcode, by = c("zip_code" = "zip")) %>% 
+  arrange(-n)
+
+
+# Question 6: Which name is good for both pet?
+
 
