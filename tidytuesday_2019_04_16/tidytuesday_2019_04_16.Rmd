@@ -150,7 +150,7 @@ q6_plot_1
 
 # Question 7: Which field is women work with?
 
-```{r Question plot}
+```{r Question 7 plot}
 
 q7_1 <- ggplot(women_research, aes(x = field, y = percent_women))+
   geom_boxplot()+
