@@ -72,16 +72,26 @@ pets %>%
        color = "Pet")+
   theme_classic()
 
-# Question 5: Top 10 lonely area in Seattle
+# Question 5: Which name is good for both pet?
 
-
-p <- pets %>% 
-  mutate(year = year(issue_date)) %>% 
-  count(zip_code, year) %>% 
-  left_join(zipcode, by = c("zip_code" = "zip")) %>% 
-  arrange(-n)
-
-
-# Question 6: Which name is good for both pet?
-
+pets %>% 
+  filter(animals_name!="NA", 
+         species %in% c("Dog", "Cat")) %>% 
+  count(animals_name, species) %>% 
+  group_by(animals_name) %>% 
+  mutate(index = n()) %>% 
+  filter(index >1) %>% 
+  mutate(index = sum(n)) %>% 
+  arrange(-index) %>% 
+  ungroup() %>%
+  top_n(n=40, wt=index) %>% 
+  mutate(animals_name = fct_reorder(animals_name, -index)) %>% 
+  ggplot(aes(x=animals_name, y=n, fill=species))+
+  geom_bar(stat="identity", width = 0.7)+
+  labs(x="Pet Name",
+       y="Number of pet",
+       title = "Good name for both dog and cat",
+       fill = "Pet")+
+  theme_classic()+
+  theme(axis.text = element_text(angle = 90))
 
