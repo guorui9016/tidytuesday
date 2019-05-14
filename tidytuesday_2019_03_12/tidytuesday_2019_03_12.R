@@ -72,5 +72,44 @@ games %>%
   ggplot(aes(x=year_published,y=n,color=min_age))+
   geom_point(aes(size = n), alpha = 0.5)+
   theme_classic()+
-  labs(x="Year", y="Number of game", title = "Age target of game",color = "Age", size = "Number")
+  labs(x="Year", y="Number of game", title = "Age target of game",color = "Age", size = "Number")+
+  guides(col=guide_legend(ncol = 2))
+
+# Question 5: Who is the top 10 designer?
+
+games %>% 
+  group_by(designer) %>% 
+  mutate(aver_rating_designer = mean(average_rating)) %>% 
+  ungroup() %>% 
+  count(designer, aver_rating_designer) %>% 
+  top_n(n=10, wt=aver_rating_designer) %>% 
+  mutate(designer = fct_reorder(designer, aver_rating_designer),
+         n = as.factor(n)) %>% 
+  ggplot(aes(x=aver_rating_designer, y = designer, size = n))+
+  geom_point()+
+  theme_classic()+
+  labs(x="Average", y="Designer", title = "The best 10 game designer in the world")
+
+#### Way 2
+
+games %>% 
+  filter(designer!="NA" & designer!="(Uncredited)") %>% 
+  group_by(designer) %>% 
+  mutate(aver_rating_designer = mean(average_rating)) %>% 
+  ungroup() %>% 
+  count(designer, aver_rating_designer) %>% 
+  top_n(n=10, wt=n) %>% 
+  mutate(designer = fct_reorder(designer, aver_rating_designer),
+         n = as.factor(n)) %>% 
+  ggplot(aes(x=aver_rating_designer, y = designer, size = n))+
+  geom_point()+
+  theme_classic()+
+  labs(x="Average", y="Designer", title = "The busiest 10 game designer in the world")
+
+
+# Question 6:
+
+g <- games %>% 
+  separate_rows(mechanic, sep = ",") %>% 
+  drop_na()
 
