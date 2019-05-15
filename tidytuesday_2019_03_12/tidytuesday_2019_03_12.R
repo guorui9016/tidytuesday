@@ -109,7 +109,11 @@ games %>%
 
 # Question 6:
 
-g <- games %>% 
+top_8_mechanics <- games %>% 
   separate_rows(mechanic, sep = ",") %>% 
-  drop_na()
+  count(mechanic) %>%
+  arrange(desc(n)) %>%
+  drop_na(mechanic) %>% 
+  slice(1:8) %>% 
+  pull(mechanic)
 
