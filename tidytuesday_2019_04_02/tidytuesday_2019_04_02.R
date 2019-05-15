@@ -84,5 +84,3 @@ bike %>%
   ggplot(aes(x = year, y = time)) + 
   geom_tile(aes(fill = sum))+
   facet_grid(day_type~crossing)
-
-  

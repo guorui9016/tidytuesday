@@ -94,4 +94,3 @@ pets %>%
        fill = "Pet")+
   theme_classic()+
   theme(axis.text = element_text(angle = 90))
-
