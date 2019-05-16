@@ -49,6 +49,8 @@ ratio %>%
   labs(x="", y="Student Ratio", title = "Student to teacher rations in global")+
   theme(axis.text = element_text(angle = 90))
 
+# Question 4:
+
 
 
 
