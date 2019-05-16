@@ -132,8 +132,3 @@ light %>%
   facet_wrap(~locality)+
   theme_classic()+
   labs(x="Year", y="Number of collision", title="Does light effect bird collision?")
-
-
-
-
-

@@ -1,9 +1,23 @@
+---
+title: "tidytuesday_2019_03_12"
+author: "Rui Guo"
+date: "2019/5/15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
 library(tidyverse)
 
-games <- read_csv("tidytuesday_2019_03_12/data/board_games.csv")
+games <- read_csv("data/board_games.csv")
+```
 
 # Question 1: Game market keep growing?
 
+```{r}
 games %>% 
   count(year_published) %>% 
   ggplot(aes(x=year_published,y = n ))+
@@ -11,17 +25,23 @@ games %>%
   labs(x="Year", y="Nmuber of games", title = "Game market keep growing")+
   theme_classic()
 
+```
+
 #### Way 2 
 
+```{r}
 games %>% 
   select(year_published) %>% 
   ggplot()+
   geom_density(aes(x =year_published))+
   labs(x="Year", y="Nmuber of games", title = "Game market keep growing")+
   theme_classic()
+
+```
   
 # Question 2: More good game?
 
+```{r}
 games %>% 
   select(year_published, average_rating) %>% 
   mutate(decade = (year_published%/%10) * 10 ) %>% 
@@ -30,8 +50,11 @@ games %>%
   labs(x="Decade", y= "Average rating", title = "We live in a game word")+
   theme_classic()
 
+```
+
 # Question 3: Play with firend?
 
+```{r}
 games %>% 
   select(year_published, min_players) %>% 
   filter((min_players!=0)) %>% 
@@ -41,8 +64,11 @@ games %>%
   theme_classic()+
   labs(x="Year", y="Number of game", title = "Play with friend")
 
+```
+
 #### Way 2:
 
+```{r}
 games %>% 
   count(year_published, min_players) %>% 
   filter((min_players!=0)) %>% 
@@ -52,8 +78,11 @@ games %>%
   theme_classic()+
   labs(x="Year", y="Number of game", title = "Play with friend")
 
+```
+
 # Question 4: kids friendly now?
 
+```{r}
 games %>% 
   filter(!min_age %in% c(0,42)) %>% 
   count(year_published, min_age) %>% 
@@ -63,8 +92,11 @@ games %>%
   theme_classic()+
   labs(x="Year", y="Number of game", title = "Age target of game",color = "Age")
 
+```
+
 ### Way 2:
 
+```{r}
 games %>% 
   filter(!min_age %in% c(0,42)) %>% 
   count(year_published, min_age) %>% 
@@ -75,8 +107,11 @@ games %>%
   labs(x="Year", y="Number of game", title = "Age target of game",color = "Age", size = "Number")+
   guides(col=guide_legend(ncol = 2))
 
+```
+
 # Question 5: Who is the top 10 designer?
 
+```{r}
 games %>% 
   group_by(designer) %>% 
   mutate(aver_rating_designer = mean(average_rating)) %>% 
@@ -90,8 +125,11 @@ games %>%
   theme_classic()+
   labs(x="Average", y="Designer", title = "The best 10 game designer in the world")
 
+```
+
 #### Way 2
 
+```{r}
 games %>% 
   filter(designer!="NA" & designer!="(Uncredited)") %>% 
   group_by(designer) %>% 
@@ -106,19 +144,11 @@ games %>%
   theme_classic()+
   labs(x="Average", y="Designer", title = "The busiest 10 game designer in the world")
 
+```
 
 # Question 6: Which mechanic of game are alway popular.
 
-<<<<<<< HEAD
-top_8_mechanics <- games %>% 
-  separate_rows(mechanic, sep = ",") %>% 
-  count(mechanic) %>%
-  arrange(desc(n)) %>%
-  drop_na(mechanic) %>% 
-  slice(1:8) %>% 
-  pull(mechanic)
-
-=======
+```{r}
 games %>% 
   separate_rows(mechanic, sep = ",") %>% 
   drop_na(mechanic) %>% 
@@ -129,4 +159,8 @@ games %>%
   geom_point(alpha=0.6)+
   theme_classic()+
   labs(x="Year", y="Mechanic", title = "Which mechanic of game are alway popular")
->>>>>>> ec96ef6697b3dd4b2754e974bd9f3f37347ceb5f
+
+```
+
+
+  
