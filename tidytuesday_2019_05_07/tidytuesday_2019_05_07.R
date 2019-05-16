@@ -39,6 +39,7 @@ ratio %>%
   coord_flip()
 
 # Question 3: Student to teacher rations in global
+
 ratio %>% 
   left_join(country_continent, by = c("country_code" = "iso3c")) %>% 
   filter(continent != "NA") %>% 
@@ -47,10 +48,48 @@ ratio %>%
   scale_y_continuous(limits = c(0,75))+
   theme_classic()+
   labs(x="", y="Student Ratio", title = "Student to teacher rations in global")+
-  theme(axis.text = element_text(angle = 90))
+  theme(axis.text = element_text(angle = 45, hjust=1))
 
-# Question 4:
+# Question 4: Do more people want to be a teacher?
 
+ratio %>% 
+  left_join(country_continent, by=c("country_code" = "iso3c")) %>% 
+  filter(continent != "NA") %>%
+  group_by(year, continent, indicator) %>% 
+  summarise(medi = median(student_ratio, na.rm = T)) %>% 
+  ggplot(aes(x=year, y=medi, color=continent))+
+  geom_point()+
+  geom_line()+
+  facet_wrap(~indicator,scales = "free_x")+
+  theme_classic()+
+  labs(x="Years", y="Student ratio", color="Continent",
+       title = "Do more people want to be a teacher?")
+
+#### Way 2:
+
+ratio %>% 
+  left_join(country_continent, by=c("country_code" = "iso3c")) %>% 
+  filter(continent != "NA") %>%
+  group_by(year, continent, indicator) %>% 
+  summarise(medi = median(student_ratio, na.rm = T)) %>% 
+  ggplot(aes(x=year, y=medi, color=continent))+
+  geom_point()+
+  geom_line()+
+  facet_grid(continent~indicator)+
+  theme_classic()+
+  labs(x="Years", y="Student ratio", color="Continent",
+       title = "Do more people want to be a teacher?")
+
+# Question 5: 
+
+ratio %>% 
+  filter(indicator %in% c("Primary Education", "Secondary Education", "Tertiary Education"),
+         year == "2017",
+         str_detect(country,"countries")) %>% 
+  ggplot(aes(x=student_ratio,y=reorder(country, -student_ratio), color=indicator))+
+  geom_point(size = 3)+
+  theme_light()+
+  labs(x="Student ratio", y="", title = "Low income contries need more teacher", color="Indicator")
 
 
 
