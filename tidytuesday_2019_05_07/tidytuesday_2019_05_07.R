@@ -7,6 +7,16 @@ world <- map_data("world")
 
 # Question 1: We need more teacher in the world
 
+
+## should not use left_join because it will lost some information of countrys.
+ratio %>% 
+  filter(indicator == "Tertiary Education") %>% 
+  left_join(world, by = c("country"="region")) %>% 
+  ggplot()+
+  geom_polygon(aes(long, lat, group = group, fill = student_ratio)  )+
+  theme_classic()
+
+  
 ratio %>% 
   filter(indicator == "Tertiary Education") %>% 
   left_join(world, by = c("country"="region")) %>% 
