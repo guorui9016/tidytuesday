@@ -91,6 +91,21 @@ nobel_winner %>%
 
 # Question 7: Want to know prize winer by birth country.
 
+world <- map_data("world")
+
+nobel_winner %>% 
+  count(birth_country) %>% 
+  mutate(birth_country = replace(birth_country, birth_country == "United States of America", "USA")) %>%
+  mutate(birth_country = replace(birth_country, birth_country == "United Kingdom", "UK")) %>%
+  full_join(world, by = c("birth_country" = "region")) %>%
+  filter(birth_country!="NA") %>%
+  ggplot(aes(x=long, y = lat, group = group))+
+  geom_polygon(aes(fill = n), size = 0.5, color = "white")+
+  theme_light()+
+  labs(x="", y="", title = "Where are nobel winners come from")+
+  theme(axis.text = element_blank(),
+        panel.grid = element_blank(),
+        panel.border = element_blank())
 
 
 
