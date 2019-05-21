@@ -109,7 +109,6 @@ games %>%
 
 # Question 6: Which mechanic of game are alway popular.
 
-<<<<<<< HEAD
 top_8_mechanics <- games %>% 
   separate_rows(mechanic, sep = ",") %>% 
   count(mechanic) %>%
@@ -118,7 +117,6 @@ top_8_mechanics <- games %>%
   slice(1:8) %>% 
   pull(mechanic)
 
-=======
 games %>% 
   separate_rows(mechanic, sep = ",") %>% 
   drop_na(mechanic) %>% 
@@ -129,4 +127,22 @@ games %>%
   geom_point(alpha=0.6)+
   theme_classic()+
   labs(x="Year", y="Mechanic", title = "Which mechanic of game are alway popular")
->>>>>>> ec96ef6697b3dd4b2754e974bd9f3f37347ceb5f
+
+
+
+# Question 7: Which category of game are popular?
+
+games %>% 
+  separate_rows(category, sep = ",") %>% 
+  filter(category != "NA") %>% 
+  count(category) %>% 
+  top_n(n=30, wt=n) %>% 
+  mutate(category = fct_reorder(category, n)) %>% 
+  ggplot(aes(x = category, y= n))+
+  geom_col()+
+  coord_flip()+
+  theme_light()+
+  labs(x="Category of game", 
+       y="Number of game",
+       title = "Tops popular category of game")
+
