@@ -98,4 +98,30 @@ jobs_gender %>%
   scale_color_hue(labels=c("Female", "Male"))+
   coord_flip()
   
+# Question 5: Women sacrifice for family?
+
+employed_gender %>% 
+  gather(key = "group", value = "value", total_full_time:part_time_male) %>% 
+  separate(group, c("job_type","time","gender"), "_") %>% 
+  filter(job_type!="total") %>% 
+  ggplot(aes(x=year,  y = value, fill = gender))+
+  geom_col(position = "dodge") +
+  facet_wrap(~job_type)
+
+employed_gender %>% 
+  gather(key = "group", value = "value", total_full_time:part_time_male) %>% 
+  separate(group, c("job_type","time","gender"), "_") %>% 
+  filter(job_type!="total") %>% 
+  ggplot(aes(x=year,  y = value, color = gender))+
+  geom_line() +
+  facet_wrap(~job_type, labeller = c("Full time", "Part time") )+
+  theme_classic()+
+  labs(x="Year", 
+       y="Work hours", 
+       title = "Women sacrifice for family?",
+       color = "Gender")
+
+
+
+
 
