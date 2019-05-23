@@ -70,5 +70,32 @@ jobs_gender %>%
   theme_light()+
   coord_flip()+
   labs(x="",y= "Income", title = "Income by gender")
+
+
+jobs_gender %>% 
+  select(major_category, total_earnings, total_earnings_male, total_earnings_female) %>%
+  mutate(wage_percent_avg_m  = total_earnings_male/total_earnings,
+         wage_percent_avg_f = total_earnings_female/total_earnings) %>% 
+  ggplot()+
+  geom_jitter(aes(x=major_category, y =wage_percent_avg_m),color = "blue", alpha = 0.6)+
+  geom_jitter(aes(x=major_category, y =wage_percent_avg_f), color = "green", alpha = 0.6)+
+  geom_hline(yintercept = 1, color = "white")+
+  theme_classic()+
+  labs(x = "", y="Precent of average wage", title = "Women get low income than man")+
+  coord_flip()
+
+jobs_gender %>% 
+  select(major_category, total_earnings, total_earnings_male, total_earnings_female) %>%
+  mutate(wage_percent_avg_m  = total_earnings_male/total_earnings,
+         wage_percent_avg_f = total_earnings_female/total_earnings) %>% 
+  select(major_category, wage_percent_avg_m,wage_percent_avg_f) %>% 
+  gather(key = "gender", value = "value", c("wage_percent_avg_m","wage_percent_avg_f")) %>% 
+  ggplot(aes(x=major_category, y= value, color = gender))+
+  geom_jitter(alpha=0.5)+
+  geom_hline(yintercept=1, color = "white")+
+  theme_classic()+
+  labs(x="", y="Percent of average wage", title ="Women get low income than man")+
+  scale_color_hue(labels=c("Female", "Male"))+
+  coord_flip()
   
-  
+
